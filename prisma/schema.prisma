@@ -1,0 +1,180 @@
+// KBSCircuit — Engineering Learning Platform schema
+// SQLite is used in this environment.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("customer") // customer | admin
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  name        String
+  description String?
+  icon        String?
+  image       String?
+  featured    Boolean    @default(false)
+  products    Product[]
+  createdAt   DateTime   @default(now())
+}
+
+model Product {
+  id            String      @id @default(cuid())
+  slug          String      @unique
+  name          String
+  shortDesc     String
+  description   String
+  price         Float
+  compareAt     Float?
+  sku           String
+  stock         Int         @default(0)
+  images        String      // JSON array of URLs
+  videoUrl      String?
+  categoryId    String
+  category      Category    @relation(fields: [categoryId], references: [id])
+  compatibility String?     // e.g. "Arduino, ESP32"
+  specs         String      // JSON array of {label,value}
+  datasheetUrl  String?
+  featured      Boolean     @default(false)
+  rating        Float       @default(0)
+  reviewCount   Int         @default(0)
+  relatedCourse String?
+  relatedProject String?
+  createdAt     DateTime    @default(now())
+  reviews       Review[]
+}
+
+model Project {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  overview      String
+  description   String
+  difficulty    String   // Beginner | Intermediate | Advanced
+  estimatedTime String
+  images        String   // JSON array
+  videoUrl      String?
+  requiredComponents String // JSON array
+  circuitDiagram String?
+  sourceCodeUrl String?
+  pcbFilesUrl   String?
+  docsUrl       String?
+  slidesUrl     String?
+  kitProductId  String?
+  category      String?
+  featured      Boolean  @default(false)
+  rating        Float    @default(0)
+  reviewCount   Int      @default(0)
+  tags          String?  // JSON array
+  createdAt     DateTime @default(now())
+  reviews       Review[]
+}
+
+model Course {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  description   String
+  overview      String
+  thumbnail     String
+  instructor    String
+  instructorBio String?
+  difficulty    String
+  duration      String
+  lessonsCount  Int      @default(0)
+  lessons       String?  // JSON array of {title,duration}
+  requirements  String?  // JSON array
+  projectsIncluded String? // JSON array
+  componentsRequired String? // JSON array
+  price         Float    @default(0)
+  videoUrl      String?
+  downloadsUrl  String?
+  featured      Boolean  @default(false)
+  rating        Float    @default(0)
+  reviewCount   Int      @default(0)
+  createdAt     DateTime @default(now())
+  reviews       Review[]
+}
+
+model Download {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  category    String   // Source Code | PCB | Datasheet | Manual | Slides | Firmware | Library
+  fileType    String   // pdf, zip, ino, etc.
+  fileSize    String
+  fileUrl     String
+  thumbnail   String?
+  downloads   Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  content     String
+  cover       String?
+  author      String
+  category    String
+  tags        String?  // JSON array
+  readTime    String
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
+  courseId  String?
+  course    Course?  @relation(fields: [courseId], references: [id])
+  author    String
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id        String   @id @default(cuid())
+  orderNo   String   @unique
+  userEmail String
+  userName  String
+  total     Float
+  status    String   @default("processing") // processing | shipped | delivered | cancelled
+  items     String   // JSON array
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSub {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+}
