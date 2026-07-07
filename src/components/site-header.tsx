@@ -84,6 +84,7 @@ export function SiteHeader() {
   }
 
   return (
+    <>
     <header
       className={cn(
         "sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60",
@@ -255,5 +256,37 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
+
+    {/* Floating mini-bar — keeps Search & Cart always reachable on mobile
+        even when the main header has slid up on scroll-down. Desktop never
+        hides the header so this is lg:hidden. */}
+    <div
+      className={cn(
+        "fixed right-3 top-3 z-50 flex items-center gap-1 rounded-full border border-border bg-background/90 p-1 shadow-md backdrop-blur supports-[backdrop-filter]:bg-background/75 transition-all duration-300 ease-out lg:hidden",
+        hidden
+          ? "translate-y-0 opacity-100"
+          : "pointer-events-none -translate-y-20 opacity-0",
+      )}
+      aria-hidden={!hidden}
+    >
+      <SearchDialog />
+      <Button
+        variant="ghost"
+        size="icon"
+        asChild
+        aria-label="Cart"
+        className="relative h-9 w-9"
+      >
+        <Link href="/cart">
+          <ShoppingCart className="h-[1.15rem] w-[1.15rem]" />
+          {cartCount > 0 && (
+            <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+              {cartCount}
+            </span>
+          )}
+        </Link>
+      </Button>
+    </div>
+    </>
   );
 }

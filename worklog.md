@@ -298,3 +298,22 @@ Stage Summary:
 - Desktop (>=1024px): always visible, never hides. Compact mode (h-14 + shadow-sm) when scrolled >16px.
 - QA passed at 320/360/375/390/414/430px: header visible at top (64px, no shadow), hidden on scroll-down (56px compact), revealed on scroll-up, restored at top. Search/Cart/Account accessible in all states.
 - Files: src/hooks/use-scroll-header.ts (new), src/components/site-header.tsx (updated). Lint clean, no console errors.
+
+---
+Task ID: NAV-UX-2
+Agent: Orchestrator (always-visible search & cart)
+Task: Keep cart badge and search icon visible at all times on mobile, even when the header hides on scroll-down.
+
+Work Log:
+- Added a floating mini-bar in site-header.tsx (fixed top-3 right-3, z-50) containing Search + Cart.
+- Mini-bar is lg:hidden (desktop never hides the header, so it's not needed there — computed display:none).
+- Visibility tied to the `hidden` state from useScrollHeader: opacity-100 + translate-y-0 when hidden, opacity-0 + -translate-y-20 + pointer-events-none otherwise. 300ms transition matches header.
+- Cart badge on the floating bar reads from the same useCart store, so it always reflects the current count.
+- Wrapped header + floating bar in a React fragment so both share the same parent.
+- No duplication: when the header is visible, the floating bar is fully hidden (opacity-0 + pointer-events-none).
+
+Stage Summary:
+- Mobile: Search + Cart remain accessible at all times — in the main header when visible, and in the floating mini-bar when the header has slid up on scroll-down.
+- Desktop: floating bar is display:none (lg:hidden); the always-visible header carries Search + Cart.
+- QA passed at 320/360/375/390/414/430px: cart badge (count=2) and search icon present in floating bar when header hidden; both hidden (no duplication) when header visible.
+- Files: src/components/site-header.tsx (added floating mini-bar). Lint clean.
