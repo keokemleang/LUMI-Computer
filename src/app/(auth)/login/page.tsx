@@ -93,7 +93,7 @@ function LoginForm() {
       <Button
         type="button"
         variant="outline"
-        className="w-full"
+        className="h-11 w-full sm:h-10"
         onClick={handleGoogle}
         disabled={googleLoading}
       >
@@ -170,7 +170,7 @@ function LoginForm() {
           </div>
         </div>
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="h-11 w-full sm:h-10" disabled={loading}>
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {loading ? "Signing in..." : "Sign in"}
         </Button>

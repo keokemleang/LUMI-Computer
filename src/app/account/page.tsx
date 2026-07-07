@@ -79,19 +79,19 @@ export default async function AccountDashboardPage() {
   const continueLearning = courses.slice(0, 2);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Welcome */}
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">
+        <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
           Welcome back, {firstName}
         </h2>
-        <p className="mt-1 text-muted-foreground">
+        <p className="mt-1 text-sm text-muted-foreground sm:text-base">
           Here&apos;s what&apos;s happening with your account today.
         </p>
       </div>
 
       {/* Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard
           icon={Package}
           label="Total Orders"
@@ -139,6 +139,47 @@ export default async function AccountDashboardPage() {
               You haven&apos;t placed any orders yet.
             </p>
           ) : (
+            /* Mobile: card list. >=sm: table. */
+            <>
+            <div className="space-y-3 px-4 sm:hidden">
+              {recentOrders.map((o) => {
+                const items = parseJson<
+                  { name: string; qty: number; price: number }[]
+                >(o.items, []);
+                const itemCount = items.reduce((n, i) => n + i.qty, 0);
+                const badgeClass =
+                  statusBadge[o.status] ?? "bg-secondary text-secondary-foreground";
+                return (
+                  <div key={o.id} className="rounded-lg border border-border p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono text-xs font-medium">{o.orderNo}</span>
+                      <span
+                        className={cn(
+                          "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium capitalize",
+                          badgeClass
+                        )}
+                      >
+                        {o.status}
+                      </span>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between gap-2 text-sm">
+                      <span className="text-muted-foreground">
+                        {formatDate(o.createdAt)} · {itemCount} {itemCount === 1 ? "item" : "items"}
+                      </span>
+                      <span className="font-semibold">${o.total.toFixed(2)}</span>
+                    </div>
+                    <Button asChild variant="outline" size="sm" className="mt-3 w-full">
+                      <Link href="/account/orders">
+                        View details
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="hidden sm:block">
+            <div className="scroll-area-thin overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -195,6 +236,9 @@ export default async function AccountDashboardPage() {
                 })}
               </TableBody>
             </Table>
+            </div>
+            </div>
+            </>
           )}
         </CardContent>
       </Card>

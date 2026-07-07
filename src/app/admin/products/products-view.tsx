@@ -148,7 +148,7 @@ export function ProductsView({ products, categories }: ProductsViewProps) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Products</h1>
+          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Products</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Manage your catalog of components, kits, and boards.
           </p>
@@ -193,145 +193,262 @@ export function ProductsView({ products, categories }: ProductsViewProps) {
       {/* Table */}
       <Card className="gap-0 p-0">
         <CardContent className="px-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-6">Product</TableHead>
-                <TableHead className="hidden md:table-cell">Category</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Stock</TableHead>
-                <TableHead className="hidden lg:table-cell">Rating</TableHead>
-                <TableHead className="hidden lg:table-cell">Status</TableHead>
-                <TableHead className="hidden xl:table-cell">Created</TableHead>
-                <TableHead className="pr-6 text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {paged.map((p) => {
-                const lowStock = p.stock < 10;
-                const out = p.stock === 0;
-                return (
-                  <TableRow key={p.id}>
-                    <TableCell className="pl-6">
-                      <div className="flex items-center gap-3">
-                        <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-border bg-muted">
-                          {p.images[0] ? (
-                            <Image
-                              src={p.images[0]}
-                              alt={p.name}
-                              fill
-                              sizes="44px"
-                              className="object-cover"
-                            />
-                          ) : (
-                            <span className="grid h-full w-full place-items-center text-muted-foreground">
-                              <PackageX className="h-4 w-4" />
-                            </span>
-                          )}
-                        </div>
+          {/* Mobile: card list */}
+          <div className="space-y-3 px-4 py-4 sm:hidden">
+            {paged.map((p) => {
+              const lowStock = p.stock < 10;
+              const out = p.stock === 0;
+              return (
+                <div key={p.id} className="rounded-lg border border-border p-3">
+                  <div className="flex items-start gap-3">
+                    <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-border bg-muted">
+                      {p.images[0] ? (
+                        <Image
+                          src={p.images[0]}
+                          alt={p.name}
+                          fill
+                          sizes="44px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <span className="grid h-full w-full place-items-center text-muted-foreground">
+                          <PackageX className="h-4 w-4" />
+                        </span>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
                           <p className="truncate text-sm font-medium">{p.name}</p>
                           <p className="font-mono text-xs text-muted-foreground">
                             {p.sku}
                           </p>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      <span className="text-sm">{p.category.name}</span>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="font-semibold">{formatCurrency(p.price)}</span>
-                        {p.compareAt != null && p.compareAt > p.price && (
-                          <span className="text-xs text-muted-foreground line-through">
-                            {formatCurrency(p.compareAt)}
+                        {p.featured ? (
+                          <span className="inline-flex shrink-0 items-center rounded-md bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">
+                            Featured
+                          </span>
+                        ) : (
+                          <span className="inline-flex shrink-0 items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                            Standard
                           </span>
                         )}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <span
-                        className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${
-                          out
-                            ? "bg-destructive/15 text-destructive"
-                            : lowStock
-                            ? "bg-warning/15 text-warning"
-                            : "bg-success/15 text-success"
-                        }`}
-                      >
-                        {out ? "Out of stock" : `${p.stock} in stock`}
-                      </span>
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell">
-                      <div className="flex items-center gap-1 text-sm">
-                        <Star className="h-3.5 w-3.5 fill-warning text-warning" />
-                        <span className="font-medium">
-                          {p.rating.toFixed(1)}
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-semibold">
+                            {formatCurrency(p.price)}
+                          </span>
+                          {p.compareAt != null && p.compareAt > p.price && (
+                            <span className="text-xs text-muted-foreground line-through">
+                              {formatCurrency(p.compareAt)}
+                            </span>
+                          )}
+                        </div>
+                        <span
+                          className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${
+                            out
+                              ? "bg-destructive/15 text-destructive"
+                              : lowStock
+                              ? "bg-warning/15 text-warning"
+                              : "bg-success/15 text-success"
+                          }`}
+                        >
+                          {out ? "Out of stock" : `${p.stock} in stock`}
                         </span>
-                        <span className="text-muted-foreground">({p.reviewCount})</span>
                       </div>
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell">
-                      {p.featured ? (
-                        <span className="inline-flex items-center rounded-md bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">
-                          Featured
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-                          Standard
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell className="hidden xl:table-cell text-sm text-muted-foreground">
-                      {formatDate(p.createdAt)}
-                    </TableCell>
-                    <TableCell className="pr-6 text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            aria-label="Product actions"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={`/products/${p.slug}`}>
-                              <Eye className="h-4 w-4" />
-                              View
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => openEdit(p)}>
-                            <Pencil className="h-4 w-4" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="text-destructive focus:text-destructive"
-                            onClick={() => handleDelete(p)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                    <span className="truncate">{p.category.name}</span>
+                    <span className="inline-flex items-center gap-1">
+                      <Star className="h-3 w-3 fill-warning text-warning" />
+                      <span className="font-medium text-foreground">
+                        {p.rating.toFixed(1)}
+                      </span>
+                      ({p.reviewCount})
+                    </span>
+                  </div>
+                  <div className="mt-3 flex items-center gap-2">
+                    <Button asChild variant="outline" size="sm" className="flex-1">
+                      <Link href={`/products/${p.slug}`}>
+                        <Eye className="h-3.5 w-3.5" />
+                        View
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openEdit(p)}
+                      className="flex-1"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                      Edit
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDelete(p)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+            {paged.length === 0 && (
+              <p className="py-12 text-center text-sm text-muted-foreground">
+                No products match your filters.
+              </p>
+            )}
+          </div>
+
+          {/* Desktop: table */}
+          <div className="hidden sm:block">
+            <div className="scroll-area-thin overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="pl-6">Product</TableHead>
+                    <TableHead className="hidden md:table-cell">Category</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>Stock</TableHead>
+                    <TableHead className="hidden lg:table-cell">Rating</TableHead>
+                    <TableHead className="hidden lg:table-cell">Status</TableHead>
+                    <TableHead className="hidden xl:table-cell">Created</TableHead>
+                    <TableHead className="pr-6 text-right">Actions</TableHead>
                   </TableRow>
-                );
-              })}
-              {paged.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={8} className="py-12 text-center text-sm text-muted-foreground">
-                    No products match your filters.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                </TableHeader>
+                <TableBody>
+                  {paged.map((p) => {
+                    const lowStock = p.stock < 10;
+                    const out = p.stock === 0;
+                    return (
+                      <TableRow key={p.id}>
+                        <TableCell className="pl-6">
+                          <div className="flex items-center gap-3">
+                            <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md border border-border bg-muted">
+                              {p.images[0] ? (
+                                <Image
+                                  src={p.images[0]}
+                                  alt={p.name}
+                                  fill
+                                  sizes="44px"
+                                  className="object-cover"
+                                />
+                              ) : (
+                                <span className="grid h-full w-full place-items-center text-muted-foreground">
+                                  <PackageX className="h-4 w-4" />
+                                </span>
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-medium">{p.name}</p>
+                              <p className="font-mono text-xs text-muted-foreground">
+                                {p.sku}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          <span className="text-sm">{p.category.name}</span>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col">
+                            <span className="font-semibold">{formatCurrency(p.price)}</span>
+                            {p.compareAt != null && p.compareAt > p.price && (
+                              <span className="text-xs text-muted-foreground line-through">
+                                {formatCurrency(p.compareAt)}
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${
+                              out
+                                ? "bg-destructive/15 text-destructive"
+                                : lowStock
+                                ? "bg-warning/15 text-warning"
+                                : "bg-success/15 text-success"
+                            }`}
+                          >
+                            {out ? "Out of stock" : `${p.stock} in stock`}
+                          </span>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <div className="flex items-center gap-1 text-sm">
+                            <Star className="h-3.5 w-3.5 fill-warning text-warning" />
+                            <span className="font-medium">
+                              {p.rating.toFixed(1)}
+                            </span>
+                            <span className="text-muted-foreground">({p.reviewCount})</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          {p.featured ? (
+                            <span className="inline-flex items-center rounded-md bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">
+                              Featured
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                              Standard
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell className="hidden xl:table-cell text-sm text-muted-foreground">
+                          {formatDate(p.createdAt)}
+                        </TableCell>
+                        <TableCell className="pr-6 text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                aria-label="Product actions"
+                              >
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem asChild>
+                                <Link href={`/products/${p.slug}`}>
+                                  <Eye className="h-4 w-4" />
+                                  View
+                                </Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => openEdit(p)}>
+                                <Pencil className="h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="text-destructive focus:text-destructive"
+                                onClick={() => handleDelete(p)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  {paged.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={8} className="py-12 text-center text-sm text-muted-foreground">
+                        No products match your filters.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
         </CardContent>
       </Card>
 

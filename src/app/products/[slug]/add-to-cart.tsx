@@ -55,7 +55,7 @@ export function AddToCart({ slug, name, price, image, stock }: AddToCartProps) {
             type="button"
             variant="ghost"
             size="icon"
-            className="h-9 w-9 rounded-r-none"
+            className="h-11 w-11 rounded-r-none sm:h-10 sm:w-10"
             onClick={() => setQty((q) => Math.max(1, q - 1))}
             disabled={outOfStock || qty <= 1}
             aria-label="Decrease quantity"
@@ -74,14 +74,14 @@ export function AddToCart({ slug, name, price, image, stock }: AddToCartProps) {
                 setQty(Math.min(v, Math.max(1, stock)));
               }
             }}
-            className="h-9 w-12 border-x border-border bg-transparent text-center text-sm outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+            className="h-11 w-12 border-x border-border bg-transparent text-center text-sm outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none sm:h-10"
             disabled={outOfStock}
           />
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className="h-9 w-9 rounded-l-none"
+            className="h-11 w-11 rounded-l-none sm:h-10 sm:w-10"
             onClick={() => setQty((q) => Math.min(Math.max(1, stock), q + 1))}
             disabled={outOfStock || qty >= stock}
             aria-label="Increase quantity"
@@ -94,7 +94,7 @@ export function AddToCart({ slug, name, price, image, stock }: AddToCartProps) {
           type="button"
           variant="outline"
           size="icon"
-          className="h-9 w-9"
+          className="h-11 w-11 sm:h-10 sm:w-10"
           onClick={handleWish}
           aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
         >
@@ -112,7 +112,7 @@ export function AddToCart({ slug, name, price, image, stock }: AddToCartProps) {
         <Button
           type="button"
           size="lg"
-          className="flex-1"
+          className="h-11 flex-1 sm:h-10"
           onClick={handleAdd}
           disabled={outOfStock}
         >
@@ -130,7 +130,7 @@ export function AddToCart({ slug, name, price, image, stock }: AddToCartProps) {
           type="button"
           size="lg"
           variant="secondary"
-          className="flex-1"
+          className="h-11 flex-1 sm:h-10"
           onClick={handleBuyNow}
           disabled={outOfStock}
         >

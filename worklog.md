@@ -243,3 +243,58 @@ Stage Summary:
 - Demo credentials shown on the login page.
 - Google sign-in button present; shows configuration toast if GOOGLE_CLIENT_ID/SECRET not set (env-driven).
 - Lint clean, all routes 200, no console errors.
+
+---
+Task ID: R-ADMIN
+Agent: full-stack-developer (admin tables mobile)
+Task: Make all admin CMS tables mobile-responsive (card list on mobile, scrollable table on desktop).
+
+Work Log:
+- Read worklog (tasks 1-3, 5a-c, 7-9, AUTH) and inspected every admin table page plus the account/orders reference implementation of the mobile card pattern.
+- Created `src/app/admin/mobile-row-actions.tsx` ('use client'): a new shared client component mirroring RowActions (View link + Edit toast + Delete confirm toast) but rendered as a row of inline outline icon buttons (full-width View/Edit + compact Delete) so it works inside mobile cards on server-component pages (projects, courses, customers, downloads, blog) where RowActions (a dropdown) is desktop-only.
+- Applied the responsive pattern to 9 admin pages (dashboard + 8 list pages):
+  • Wrapped each existing desktop `<Table>` in `<div className="hidden sm:block"><div className="scroll-area-thin overflow-x-auto">…</div></div>` so the desktop (sm+) layout is unchanged but the table no longer overflows its card.
+  • Added a `<div className="space-y-3 px-4 py-4 sm:hidden">` mobile card list above the desktop wrapper; each row becomes a `rounded-lg border border-border p-3` card showing the 2-3 most important fields in a header row + secondary info below + action row at the bottom.
+  • Downgraded every page heading from `text-2xl` → `text-xl sm:text-2xl`.
+  • Preserved all existing functionality: products search/filter/pagination/dialog, orders status filter + 4 stat tiles + OrderDetailDialog (mobile View button opens the same dialog), all AddButton toasts, all RowActions desktop dropdowns, all badge color mappings (status/difficulty/category/role/publish).
+  • Mobile action buttons reuse the same semantics as RowActions (View = Link to detail page, Edit = toast, Delete = confirm-with-cancel toast) — for products/orders (client components) inline Button onClicks call the existing openEdit/handleDelete/setViewing; for server-component pages they call the new MobileRowActions client component.
+- Per-page mobile card content:
+  • Dashboard (/admin): orderNo + status pill header, customer + total, email · date.
+  • Products: image + name + SKU + Featured/Standard badge, price (+ compareAt strikethrough) + stock badge, category + rating row, View/Edit/Delete inline buttons (Edit opens the same ProductFormDialog).
+  • Categories: icon + name + Featured badge, slug, description (2-line clamp), product count.
+  • Projects: title + overview + Featured badge, difficulty + category + rating row, MobileRowActions (View → /projects/[slug]).
+  • Courses: title + description + price (Free/success), difficulty + instructor + lessons + rating row, MobileRowActions (View → /courses/[slug]).
+  • Customers: avatar initials + name + role badge, email (with Mail icon), joined date (with Calendar icon), MobileRowActions.
+  • Downloads: icon + title + description, category + fileType + size, downloads count + added date, MobileRowActions.
+  • Blog: icon + title + Published/Draft badge, excerpt, category + author + readTime + date row, MobileRowActions (View → /blog/[slug]).
+  • Orders: orderNo + status pill header, customer name+email + total, item count · date, full-width "View details" outline button that opens the same OrderDetailDialog.
+- Did NOT modify any foundation files (globals.css, root layout, schema.prisma, data.ts) or change desktop table markup/columns; only added mobile card list + table wrapper.
+- Ran `bun run lint` — 0 errors, 0 warnings.
+- Verified end-to-end by logging in as admin (admin@kbscircuit.com) and curling all 9 admin routes: all return HTTP 200, each rendered HTML contains exactly one `space-y-3 px-4 py-4 sm:hidden` (mobile list), one `hidden sm:block` (desktop wrapper), and `scroll-area-thin` (overflow scrollbar). No compile errors in dev.log (all routes compiled in 3-9ms after first hit).
+
+Stage Summary:
+- Files created: src/app/admin/mobile-row-actions.tsx.
+- Files modified: src/app/admin/page.tsx, src/app/admin/products/products-view.tsx, src/app/admin/categories/page.tsx, src/app/admin/projects/page.tsx, src/app/admin/courses/page.tsx, src/app/admin/orders/orders-view.tsx, src/app/admin/customers/page.tsx, src/app/admin/downloads/page.tsx, src/app/admin/blog/page.tsx.
+- Key decisions: kept desktop RowActions dropdown untouched for sm+ and introduced a parallel MobileRowActions (inline icon buttons) for mobile so server-component list pages keep their existing data-fetching/RSC architecture without needing to become client components; reused the same badge maps and formatters from helpers.tsx for visual parity between mobile and desktop; mobile action row uses flex-1 outline buttons (View + Edit full-width, Delete compact, destructive-tinted) for ≥44px touch targets; orders mobile "View" button reuses the existing setViewing state so the same OrderDetailDialog renders identically on mobile and desktop; products mobile Edit button calls the existing openEdit so ProductFormDialog works on mobile too.
+- Foundation files (globals.css, layout, schema.prisma, data.ts) were not modified. No footer added. No tests written.
+
+---
+Task ID: NAV-UX
+Agent: Orchestrator (mobile navigation UX)
+Task: Implement intelligent sticky header with hide/show on mobile, compact-on-scroll, anti-flicker, desktop always-visible.
+
+Work Log:
+- Created src/hooks/use-scroll-header.ts — optimized scroll hook using requestAnimationFrame + passive listeners.
+- Initial approach used lastStateChangeY delta tracking inside setState updater; React 19 double-invoked updaters corrupted the ref. Rewrote to compute all values from refs OUTSIDE setState (no ref mutations in updater).
+- Final algorithm: per-frame direction via prevScrollY (robust against non-monotonic scroll / iOS rubber-banding) + 5px dead zone for anti-flicker.
+- State tracked in refs (hiddenRef, compactRef, prevScrollY); setState only called when values actually change — zero re-renders on idle scroll.
+- isMobileRef cached via matchMedia, updated on resize; switching to desktop instantly unhides.
+- forceVisible param (passed `open` from mobile drawer) keeps header visible when drawer is open so hamburger stays reachable.
+- Updated site-header.tsx: header gets transition-[transform,height,box-shadow] duration-300 ease-out will-change-transform; -translate-y-full when hidden; shadow-sm when compact && !hidden. Inner div transitions h-16 ↔ h-14.
+- No glow effects, no redesign — only behavior + subtle height/shadow changes. Branding, colors, typography, spacing, icons all preserved.
+
+Stage Summary:
+- Mobile (<1024px): visible at top → hides on scroll-down (12px delta) → reveals immediately on scroll-up (4px delta) → always visible within 8px of top. Anti-flicker dead zone (5px). 300ms smooth transitions.
+- Desktop (>=1024px): always visible, never hides. Compact mode (h-14 + shadow-sm) when scrolled >16px.
+- QA passed at 320/360/375/390/414/430px: header visible at top (64px, no shadow), hidden on scroll-down (56px compact), revealed on scroll-up, restored at top. Search/Cart/Account accessible in all states.
+- Files: src/hooks/use-scroll-header.ts (new), src/components/site-header.tsx (updated). Lint clean, no console errors.

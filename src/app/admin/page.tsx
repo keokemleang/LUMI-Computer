@@ -143,7 +143,7 @@ export default async function AdminDashboardPage() {
       {/* Page header */}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Dashboard</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Welcome back. Here&apos;s what&apos;s happening across KBSCircuit today.
           </p>
@@ -233,52 +233,83 @@ export default async function AdminDashboardPage() {
             </Button>
           </CardHeader>
           <CardContent className="px-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="pl-6">Order</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Total</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="pr-6 text-right">Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentOrders.map((o) => (
-                  <TableRow key={o.id}>
-                    <TableCell className="pl-6 font-mono text-xs font-medium">
-                      {o.orderNo}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium">{o.userName}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {o.userEmail}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-semibold">
-                      {formatCurrency(o.total)}
-                    </TableCell>
-                    <TableCell>
-                      <StatusPill className={badgeClass(ORDER_STATUS_BADGE, o.status)}>
-                        {o.status}
-                      </StatusPill>
-                    </TableCell>
-                    <TableCell className="pr-6 text-right text-sm text-muted-foreground">
-                      {formatDate(o.createdAt)}
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {recentOrders.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={5} className="py-10 text-center text-sm text-muted-foreground">
-                      No orders yet.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            {/* Mobile: card list */}
+            <div className="space-y-3 px-4 py-4 sm:hidden">
+              {recentOrders.map((o) => (
+                <div key={o.id} className="rounded-lg border border-border p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-mono text-xs font-medium">{o.orderNo}</span>
+                    <StatusPill className={badgeClass(ORDER_STATUS_BADGE, o.status)}>
+                      {o.status}
+                    </StatusPill>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between gap-2 text-sm">
+                    <span className="truncate font-medium">{o.userName}</span>
+                    <span className="font-semibold">{formatCurrency(o.total)}</span>
+                  </div>
+                  <p className="mt-1 truncate text-xs text-muted-foreground">
+                    {o.userEmail} · {formatDate(o.createdAt)}
+                  </p>
+                </div>
+              ))}
+              {recentOrders.length === 0 && (
+                <p className="py-10 text-center text-sm text-muted-foreground">
+                  No orders yet.
+                </p>
+              )}
+            </div>
+
+            {/* Desktop: table */}
+            <div className="hidden sm:block">
+              <div className="scroll-area-thin overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="pl-6">Order</TableHead>
+                      <TableHead>Customer</TableHead>
+                      <TableHead>Total</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="pr-6 text-right">Date</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentOrders.map((o) => (
+                      <TableRow key={o.id}>
+                        <TableCell className="pl-6 font-mono text-xs font-medium">
+                          {o.orderNo}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium">{o.userName}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {o.userEmail}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-semibold">
+                          {formatCurrency(o.total)}
+                        </TableCell>
+                        <TableCell>
+                          <StatusPill className={badgeClass(ORDER_STATUS_BADGE, o.status)}>
+                            {o.status}
+                          </StatusPill>
+                        </TableCell>
+                        <TableCell className="pr-6 text-right text-sm text-muted-foreground">
+                          {formatDate(o.createdAt)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {recentOrders.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={5} className="py-10 text-center text-sm text-muted-foreground">
+                          No orders yet.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </CardContent>
         </Card>
 

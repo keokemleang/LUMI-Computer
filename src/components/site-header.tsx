@@ -26,6 +26,7 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import { HeaderAuth } from "@/components/header-auth";
 import { SearchDialog } from "@/components/search-dialog";
+import { useScrollHeader } from "@/hooks/use-scroll-header";
 import { useCart } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -63,6 +64,10 @@ export function SiteHeader() {
   const { data: session, status } = useSession();
   const [open, setOpen] = React.useState(false);
   const cartCount = useCartCount();
+  // Intelligent hide/show on mobile; compact-on-scroll on desktop.
+  // `open` forces the header visible so the hamburger button stays reachable
+  // while the mobile drawer is open.
+  const { hidden, compact } = useScrollHeader(open);
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
@@ -79,8 +84,20 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container-page flex h-16 items-center gap-4">
+    <header
+      className={cn(
+        "sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "transition-[transform,height,box-shadow] duration-300 ease-out will-change-transform",
+        hidden ? "-translate-y-full" : "translate-y-0",
+        compact && !hidden && "shadow-sm",
+      )}
+    >
+      <div
+        className={cn(
+          "container-page flex items-center gap-4 transition-[height] duration-200 ease-out",
+          compact ? "h-14" : "h-16",
+        )}
+      >
         {/* Mobile menu */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
@@ -106,7 +123,7 @@ export function SiteHeader() {
                   href={link.href}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    "rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
+                    "flex min-h-[44px] items-center rounded-md px-3 text-sm font-medium transition-colors",
                     isActive(link.href)
                       ? "bg-primary/10 text-primary"
                       : "text-foreground/70 hover:bg-accent hover:text-foreground"
@@ -121,7 +138,7 @@ export function SiteHeader() {
                   <Link
                     href="/account"
                     onClick={() => setOpen(false)}
-                    className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
+                    className="flex min-h-[44px] items-center rounded-md px-3 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
                   >
                     My Account
                   </Link>
@@ -129,14 +146,14 @@ export function SiteHeader() {
                     <Link
                       href="/admin"
                       onClick={() => setOpen(false)}
-                      className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
+                      className="flex min-h-[44px] items-center gap-2 rounded-md px-3 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
                     >
                       <ShieldCheck className="h-4 w-4" /> Admin Console
                     </Link>
                   )}
                   <button
                     onClick={handleMobileSignOut}
-                    className="flex items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
+                    className="flex min-h-[44px] items-center gap-2 rounded-md px-3 text-left text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
                   >
                     <LogOut className="h-4 w-4" /> Sign out
                   </button>
@@ -146,14 +163,14 @@ export function SiteHeader() {
                   <Link
                     href="/login"
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
+                    className="flex min-h-[44px] items-center gap-2 rounded-md px-3 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
                   >
                     <LogIn className="h-4 w-4" /> Log in
                   </Link>
                   <Link
                     href="/register"
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 rounded-md bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+                    className="flex min-h-[44px] items-center gap-2 rounded-md bg-primary px-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
                   >
                     <UserPlus className="h-4 w-4" /> Create account
                   </Link>

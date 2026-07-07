@@ -46,42 +46,42 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_50%_0%,var(--primary)/8%,transparent)]" />
-        <div className="container-page grid gap-10 py-16 md:py-24 lg:grid-cols-2 lg:items-center">
+        <div className="container-page grid gap-8 py-10 sm:gap-10 sm:py-16 md:py-24 lg:grid-cols-2 lg:items-center">
           <div>
             <Badge variant="secondary" className="mb-4 gap-1.5">
               <Zap className="h-3.5 w-3.5 text-primary" />
               Learn · Build · Experiment
             </Badge>
-            <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="text-balance text-3xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               The complete{" "}
               <span className="text-primary">engineering learning</span> platform
             </h1>
-            <p className="mt-5 max-w-xl text-balance text-lg text-muted-foreground">
+            <p className="mt-5 max-w-xl text-balance text-base text-muted-foreground sm:text-lg">
               Buy components, get complete project kits, follow video courses, download source
               code, PCB files, and documentation — everything you need to finish your project in
               one place.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="h-11 sm:h-10">
                 <Link href="/products">
                   Browse Components <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
+              <Button asChild size="lg" variant="outline" className="h-11 sm:h-10">
                 <Link href="/projects">Explore Projects</Link>
               </Button>
             </div>
-            <div className="mt-10 grid grid-cols-3 gap-6 border-t border-border pt-6 text-sm">
+            <div className="mt-8 grid grid-cols-3 gap-4 border-t border-border pt-6 text-sm sm:mt-10 sm:gap-6">
               <div>
-                <div className="text-2xl font-bold">15+</div>
+                <div className="text-xl font-bold sm:text-2xl">15+</div>
                 <div className="text-muted-foreground">Categories</div>
               </div>
               <div>
-                <div className="text-2xl font-bold">120+</div>
+                <div className="text-xl font-bold sm:text-2xl">120+</div>
                 <div className="text-muted-foreground">Projects</div>
               </div>
               <div>
-                <div className="text-2xl font-bold">40+</div>
+                <div className="text-xl font-bold sm:text-2xl">40+</div>
                 <div className="text-muted-foreground">Courses</div>
               </div>
             </div>
@@ -119,7 +119,7 @@ export default async function HomePage() {
 
       {/* Trust bar */}
       <section className="border-b border-border bg-muted/30">
-        <div className="container-page grid gap-4 py-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="container-page grid grid-cols-2 gap-4 py-6 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { icon: Truck, title: "Fast Shipping", desc: "Worldwide delivery" },
             { icon: ShieldCheck, title: "Quality Guaranteed", desc: "Tested components" },
@@ -140,7 +140,7 @@ export default async function HomePage() {
       </section>
 
       {/* Popular Categories */}
-      <section className="container-page py-16">
+      <section className="container-page py-10 sm:py-16">
         <SectionHeader
           eyebrow="Browse"
           title="Popular Categories"
@@ -171,7 +171,7 @@ export default async function HomePage() {
       </section>
 
       {/* Featured Products */}
-      <section className="border-y border-border bg-muted/20 py-16">
+      <section className="border-y border-border bg-muted/20 py-10 sm:py-16">
         <div className="container-page">
           <SectionHeader
             eyebrow="Shop"
@@ -189,7 +189,7 @@ export default async function HomePage() {
       </section>
 
       {/* Popular Project Kits */}
-      <section className="container-page py-16">
+      <section className="container-page py-10 sm:py-16">
         <SectionHeader
           eyebrow="Build"
           title="Popular Project Kits"
@@ -205,7 +205,7 @@ export default async function HomePage() {
       </section>
 
       {/* Featured Courses */}
-      <section className="border-y border-border bg-muted/20 py-16">
+      <section className="border-y border-border bg-muted/20 py-10 sm:py-16">
         <div className="container-page">
           <SectionHeader
             eyebrow="Learn"
@@ -223,10 +223,10 @@ export default async function HomePage() {
       </section>
 
       {/* Why KBSCircuit */}
-      <section className="container-page py-16">
+      <section className="container-page py-10 sm:py-16">
         <div className="mx-auto max-w-2xl text-center">
           <Badge variant="secondary" className="mb-3">Why KBSCircuit</Badge>
-          <h2 className="text-balance text-3xl font-bold tracking-tight">
+          <h2 className="text-balance text-xl font-bold tracking-tight sm:text-3xl">
             Not just a store — a complete learning ecosystem
           </h2>
           <p className="mt-3 text-muted-foreground">
@@ -234,7 +234,7 @@ export default async function HomePage() {
             project without juggling five different platforms.
           </p>
         </div>
-        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:mt-10 lg:grid-cols-4">
           {[
             { icon: ShoppingCart, title: "Buy Hardware", desc: "Components, modules, and tools from trusted brands." },
             { icon: FolderGit2, title: "Get Project Kits", desc: "Complete kits with everything needed for a build." },
@@ -253,7 +253,7 @@ export default async function HomePage() {
       </section>
 
       {/* Latest Tutorials */}
-      <section className="border-y border-border bg-muted/20 py-16">
+      <section className="border-y border-border bg-muted/20 py-10 sm:py-16">
         <div className="container-page">
           <SectionHeader
             eyebrow="Read"
@@ -296,15 +296,15 @@ export default async function HomePage() {
       </section>
 
       {/* Community CTA */}
-      <section className="container-page py-16">
-        <Card className="relative overflow-hidden p-8 md:p-12">
+      <section className="container-page py-10 sm:py-16">
+        <Card className="relative overflow-hidden p-6 sm:p-8 md:p-12">
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(50%_80%_at_100%_0%,var(--primary)/10%,transparent)]" />
           <div className="grid gap-6 lg:grid-cols-2 lg:items-center">
             <div>
               <Badge variant="secondary" className="mb-3 gap-1.5">
                 <Users className="h-3.5 w-3.5" /> Community
               </Badge>
-              <h2 className="text-balance text-3xl font-bold tracking-tight">
+              <h2 className="text-balance text-xl font-bold tracking-tight sm:text-3xl">
                 Join thousands of makers building together
               </h2>
               <p className="mt-3 text-muted-foreground">
@@ -312,10 +312,10 @@ export default async function HomePage() {
                 around the world. Showcase your work and get feedback.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Button asChild>
+                <Button asChild className="h-11 sm:h-10">
                   <Link href="/community">Visit Community <ArrowRight className="ml-1 h-4 w-4" /></Link>
                 </Button>
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="h-11 sm:h-10">
                   <Link href="/support">Get Support</Link>
                 </Button>
               </div>
@@ -362,10 +362,10 @@ function SectionHeader({
     <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
       <div className="max-w-2xl">
         <div className="text-xs font-semibold uppercase tracking-wider text-primary">{eyebrow}</div>
-        <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{title}</h2>
+        <h2 className="mt-1 text-xl font-bold tracking-tight sm:text-3xl">{title}</h2>
         <p className="mt-2 text-muted-foreground">{desc}</p>
       </div>
-      <Button asChild variant="outline" size="sm" className="shrink-0">
+      <Button asChild variant="outline" size="sm" className="h-9 shrink-0 sm:h-8">
         <Link href={href}>
           {linkLabel} <ArrowRight className="ml-1 h-4 w-4" />
         </Link>

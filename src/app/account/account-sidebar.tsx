@@ -145,19 +145,19 @@ export function AccountSidebar({ user }: { user: AccountUser }) {
 
         <nav
           aria-label="Account"
-          className="mt-3 -mx-4 overflow-x-auto px-4 pb-1"
+          className="scrollbar-none mt-3 min-w-0 overflow-x-auto"
         >
-          <ul className="flex w-max gap-1">
+          <ul className="flex w-max gap-1.5">
             {NAV_ITEMS.map((item) => {
               const active = isActive(pathname, item.href);
               const Icon = item.icon;
               return (
-                <li key={item.href}>
+                <li key={item.href} className="shrink-0">
                   <Link
                     href={item.href}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                      "flex min-h-[44px] items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-sm font-medium transition-colors",
                       active
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"

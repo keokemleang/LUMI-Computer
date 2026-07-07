@@ -55,7 +55,7 @@ export default async function AccountLayout({
         Manage your orders, courses, downloads, wishlist, and account settings.
       </p>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[240px_1fr] lg:gap-10">
+      <div className="mt-8 grid gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
         <AccountSidebar user={user} />
         <div className="min-w-0">{children}</div>
       </div>

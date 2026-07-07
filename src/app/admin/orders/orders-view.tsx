@@ -83,7 +83,7 @@ export function OrdersView({ orders }: OrdersViewProps) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Orders</h1>
+          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Orders</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Track and fulfill customer orders.
           </p>
@@ -126,70 +126,121 @@ export function OrdersView({ orders }: OrdersViewProps) {
 
       <Card className="gap-0 p-0">
         <CardContent className="px-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="pl-6">Order</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead className="hidden md:table-cell">Items</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="hidden lg:table-cell">Date</TableHead>
-                <TableHead className="pr-6 text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.map((o) => {
-                const itemCount = o.items.reduce((n, i) => n + i.qty, 0);
-                return (
-                  <TableRow key={o.id}>
-                    <TableCell className="pl-6 font-mono text-xs font-medium">
-                      {o.orderNo}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium">{o.userName}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {o.userEmail}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell text-sm">
-                      {itemCount} {itemCount === 1 ? "item" : "items"}
-                    </TableCell>
-                    <TableCell className="font-semibold">
+          {/* Mobile: card list */}
+          <div className="space-y-3 px-4 py-4 sm:hidden">
+            {filtered.map((o) => {
+              const itemCount = o.items.reduce((n, i) => n + i.qty, 0);
+              return (
+                <div key={o.id} className="rounded-lg border border-border p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-mono text-xs font-medium">{o.orderNo}</span>
+                    <StatusPill className={badgeClass(ORDER_STATUS_BADGE, o.status)}>
+                      {o.status}
+                    </StatusPill>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between gap-2 text-sm">
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{o.userName}</p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {o.userEmail}
+                      </p>
+                    </div>
+                    <span className="shrink-0 font-semibold">
                       {formatCurrency(o.total)}
-                    </TableCell>
-                    <TableCell>
-                      <StatusPill className={badgeClass(ORDER_STATUS_BADGE, o.status)}>
-                        {o.status}
-                      </StatusPill>
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
-                      {formatDate(o.createdAt)}
-                    </TableCell>
-                    <TableCell className="pr-6 text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setViewing(o)}
-                      >
-                        <Eye className="h-4 w-4" />
-                        View
-                      </Button>
-                    </TableCell>
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {itemCount} {itemCount === 1 ? "item" : "items"} ·{" "}
+                    {formatDate(o.createdAt)}
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-3 w-full"
+                    onClick={() => setViewing(o)}
+                  >
+                    <Eye className="h-3.5 w-3.5" />
+                    View details
+                  </Button>
+                </div>
+              );
+            })}
+            {filtered.length === 0 && (
+              <p className="py-12 text-center text-sm text-muted-foreground">
+                No orders match this filter.
+              </p>
+            )}
+          </div>
+
+          {/* Desktop: table */}
+          <div className="hidden sm:block">
+            <div className="scroll-area-thin overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="pl-6">Order</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead className="hidden md:table-cell">Items</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="hidden lg:table-cell">Date</TableHead>
+                    <TableHead className="pr-6 text-right">Actions</TableHead>
                   </TableRow>
-                );
-              })}
-              {filtered.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={7} className="py-12 text-center text-sm text-muted-foreground">
-                    No orders match this filter.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((o) => {
+                    const itemCount = o.items.reduce((n, i) => n + i.qty, 0);
+                    return (
+                      <TableRow key={o.id}>
+                        <TableCell className="pl-6 font-mono text-xs font-medium">
+                          {o.orderNo}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium">{o.userName}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {o.userEmail}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell text-sm">
+                          {itemCount} {itemCount === 1 ? "item" : "items"}
+                        </TableCell>
+                        <TableCell className="font-semibold">
+                          {formatCurrency(o.total)}
+                        </TableCell>
+                        <TableCell>
+                          <StatusPill className={badgeClass(ORDER_STATUS_BADGE, o.status)}>
+                            {o.status}
+                          </StatusPill>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
+                          {formatDate(o.createdAt)}
+                        </TableCell>
+                        <TableCell className="pr-6 text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setViewing(o)}
+                          >
+                            <Eye className="h-4 w-4" />
+                            View
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  {filtered.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={7} className="py-12 text-center text-sm text-muted-foreground">
+                        No orders match this filter.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
         </CardContent>
       </Card>
 

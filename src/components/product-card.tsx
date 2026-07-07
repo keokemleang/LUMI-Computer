@@ -68,13 +68,13 @@ export function ProductCard({ product, className }: ProductCardProps) {
             toggleWish({ slug: product.slug, name: product.name, price: product.price, image: product.images[0] });
             toast.success(wished ? "Removed from wishlist" : "Added to wishlist");
           }}
-          aria-label="Toggle wishlist"
-          className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-background/80 backdrop-blur transition-colors hover:bg-background"
+          aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
+          className="absolute right-2 top-2 grid h-9 w-9 place-items-center rounded-full bg-background/80 backdrop-blur transition-colors hover:bg-background"
         >
           <Heart className={cn("h-4 w-4", wished && "fill-destructive text-destructive")} />
         </button>
       </div>
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
         <Link
           href={`/categories/${product.category.slug}`}
           className="text-xs font-medium text-primary hover:underline"
@@ -82,19 +82,19 @@ export function ProductCard({ product, className }: ProductCardProps) {
           {product.category.name}
         </Link>
         <Link href={`/products/${product.slug}`} className="mt-1">
-          <h3 className="line-clamp-1 font-semibold leading-tight hover:text-primary">
+          <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-tight hover:text-primary sm:min-h-[2.75rem] sm:text-base">
             {product.name}
           </h3>
         </Link>
-        <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{product.shortDesc}</p>
+        <p className="mt-1 line-clamp-2 min-h-[2.5rem] text-xs text-muted-foreground sm:text-sm">{product.shortDesc}</p>
         <div className="mt-2">
           <StarRating rating={product.rating} showValue count={product.reviewCount} />
         </div>
-        <div className="mt-auto flex items-end justify-between pt-3">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-lg font-bold">${product.price.toFixed(2)}</span>
+        <div className="mt-auto flex items-end justify-between gap-2 pt-3">
+          <div className="flex min-w-0 flex-col">
+            <span className="text-base font-bold sm:text-lg">${product.price.toFixed(2)}</span>
             {product.compareAt && (
-              <span className="text-sm text-muted-foreground line-through">
+              <span className="text-xs text-muted-foreground line-through">
                 ${product.compareAt.toFixed(2)}
               </span>
             )}
@@ -102,6 +102,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
           <Button
             size="sm"
             variant={added ? "secondary" : "default"}
+            className="h-9 shrink-0 px-3 sm:h-9"
             onClick={() => {
               add({
                 slug: product.slug,
