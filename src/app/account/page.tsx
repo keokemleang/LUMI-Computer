@@ -31,6 +31,8 @@ import {
   getDownloads,
   parseJson,
 } from "@/lib/data";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 const statusBadge: Record<string, string> = {
@@ -57,6 +59,9 @@ function formatDate(iso: string | Date) {
 }
 
 export default async function AccountDashboardPage() {
+  const session = await getServerSession(authOptions);
+  const firstName = (session?.user?.name || "there").split(" ")[0];
+
   const [orders, courses, downloads] = await Promise.all([
     getOrders(),
     getCourses(),
@@ -78,7 +83,7 @@ export default async function AccountDashboardPage() {
       {/* Welcome */}
       <div>
         <h2 className="text-2xl font-bold tracking-tight">
-          Welcome back, Sam
+          Welcome back, {firstName}
         </h2>
         <p className="mt-1 text-muted-foreground">
           Here&apos;s what&apos;s happening with your account today.

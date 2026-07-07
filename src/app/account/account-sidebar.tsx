@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   Package,
@@ -15,11 +16,19 @@ import {
   LogOut,
   type LucideIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+
+export interface AccountUser {
+  name: string | null;
+  email: string | null;
+  image: string | null;
+  initials: string;
+  role: string;
+}
 
 interface NavItem {
   href: string;
@@ -43,8 +52,16 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
-export function AccountSidebar() {
+export function AccountSidebar({ user }: { user: AccountUser }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleSignOut() {
+    await signOut({ redirect: false });
+    toast.success("You've been signed out.");
+    router.push("/");
+    router.refresh();
+  }
 
   return (
     <div className="lg:sticky lg:top-20 lg:self-start">
@@ -52,22 +69,21 @@ export function AccountSidebar() {
       <Card className="hidden gap-0 p-5 lg:block">
         <div className="flex items-center gap-3">
           <Avatar className="h-12 w-12">
+            {user.image ? <AvatarImage src={user.image} alt={user.name || "Account"} /> : null}
             <AvatarFallback className="bg-primary/15 text-base font-semibold text-primary">
-              SS
+              {user.initials}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <p className="truncate font-semibold leading-tight">Sam Student</p>
-            <p className="truncate text-xs text-muted-foreground">
-              student@example.com
-            </p>
+            <p className="truncate font-semibold leading-tight">{user.name || "Account"}</p>
+            <p className="truncate text-xs text-muted-foreground">{user.email}</p>
           </div>
         </div>
         <Button
           variant="outline"
           size="sm"
           className="mt-4 w-full"
-          onClick={() => toast.info("Sign out is a demo action.")}
+          onClick={handleSignOut}
         >
           <LogOut className="h-4 w-4" />
           Sign out
@@ -106,24 +122,21 @@ export function AccountSidebar() {
         <Card className="gap-0 p-4">
           <div className="flex items-center gap-3">
             <Avatar className="h-11 w-11">
+              {user.image ? <AvatarImage src={user.image} alt={user.name || "Account"} /> : null}
               <AvatarFallback className="bg-primary/15 text-sm font-semibold text-primary">
-                SS
+                {user.initials}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <p className="truncate font-semibold leading-tight">
-                Sam Student
-              </p>
-              <p className="truncate text-xs text-muted-foreground">
-                student@example.com
-              </p>
+              <p className="truncate font-semibold leading-tight">{user.name || "Account"}</p>
+              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
             </div>
             <Button
               variant="ghost"
               size="icon"
               className="text-muted-foreground"
               aria-label="Sign out"
-              onClick={() => toast.info("Sign out is a demo action.")}
+              onClick={handleSignOut}
             >
               <LogOut className="h-4 w-4" />
             </Button>

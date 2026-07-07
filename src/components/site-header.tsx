@@ -3,7 +3,9 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Search, ShoppingCart, User, Cpu, ChevronDown } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Menu, ShoppingCart, Cpu, ChevronDown, LogIn, UserPlus, LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -21,18 +23,12 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { HeaderAuth } from "@/components/header-auth";
 import { SearchDialog } from "@/components/search-dialog";
 import { useCart } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const navLinks = [
   { href: "/products", label: "Products" },
@@ -63,11 +59,24 @@ function useCartCount() {
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session, status } = useSession();
   const [open, setOpen] = React.useState(false);
   const cartCount = useCartCount();
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
+
+  const isLoggedIn = status === "authenticated" && !!session?.user;
+  const isAdmin = isLoggedIn && (session?.user as any)?.role === "admin";
+
+  async function handleMobileSignOut() {
+    setOpen(false);
+    await signOut({ redirect: false });
+    toast.success("You've been signed out.");
+    router.push("/");
+    router.refresh();
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -107,20 +116,49 @@ export function SiteHeader() {
                 </Link>
               ))}
               <div className="my-2 h-px bg-border" />
-              <Link
-                href="/account"
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
-              >
-                My Account
-              </Link>
-              <Link
-                href="/admin"
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
-              >
-                Admin CMS
-              </Link>
+              {isLoggedIn ? (
+                <>
+                  <Link
+                    href="/account"
+                    onClick={() => setOpen(false)}
+                    className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
+                  >
+                    My Account
+                  </Link>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
+                    >
+                      <ShieldCheck className="h-4 w-4" /> Admin Console
+                    </Link>
+                  )}
+                  <button
+                    onClick={handleMobileSignOut}
+                    className="flex items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
+                  >
+                    <LogOut className="h-4 w-4" /> Sign out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-foreground/70 hover:bg-accent hover:text-foreground"
+                  >
+                    <LogIn className="h-4 w-4" /> Log in
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 rounded-md bg-primary px-3 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+                  >
+                    <UserPlus className="h-4 w-4" /> Create account
+                  </Link>
+                </>
+              )}
             </nav>
           </SheetContent>
         </Sheet>
@@ -196,36 +234,7 @@ export function SiteHeader() {
             </Link>
           </Button>
           <ThemeToggle />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Account">
-                <User className="h-[1.15rem] w-[1.15rem]" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-52">
-              <DropdownMenuLabel>Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/account" className="cursor-pointer">Dashboard</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/account/orders" className="cursor-pointer">Orders</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/account/courses" className="cursor-pointer">My Courses</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/account/wishlist" className="cursor-pointer">Wishlist</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/admin" className="cursor-pointer">Admin CMS</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/contact" className="cursor-pointer">Contact Support</Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <HeaderAuth />
         </div>
       </div>
     </header>

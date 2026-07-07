@@ -13,10 +13,13 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
-  name      String?
-  role      String   @default("customer") // customer | admin
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  name        String?
+  role        String   @default("customer") // customer | admin
+  password    String?  // hashed password (for email/password auth); null for OAuth-only
+  image       String?  // avatar URL (OAuth providers)
+  emailVerified String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Category {

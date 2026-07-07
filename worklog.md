@@ -207,3 +207,39 @@ Stage Summary:
 - KBSCircuit is complete and browser-verified. All core flows work: browsing, search, product detail, cart, theme switching, account dashboard, admin CMS.
 - Console is clean (no errors, no image warnings, no deprecation warnings).
 - The platform is a multi-page engineering learning ecosystem with 25+ routes.
+
+---
+Task ID: AUTH
+Agent: Orchestrator (authentication system)
+Task: Add login & signup/register with email (incl. Gmail) + password validation (uppercase, number, special char, length) + Google option. Gate account & admin routes.
+
+Work Log:
+- Extended User model with password (hashed), image, emailVerified fields; ran db:push.
+- Added .env vars: NEXTAUTH_SECRET, NEXTAUTH_URL, NEXT_PUBLIC_GOOGLE_ENABLED, GOOGLE_CLIENT_ID/SECRET.
+- Created src/lib/password-rules.ts (isomorphic: validatePassword, isValidEmail, initialsFromName — client-safe) and src/lib/password.ts (server-only: hashPassword/verifyPassword using Node crypto.scrypt + re-exports rules).
+- Created src/lib/auth.ts — NextAuth v4 config: CredentialsProvider (email+password, scrypt verify) + GoogleProvider (conditional on env). JWT strategy, custom /login page, jwt/session callbacks adding id+role, signIn callback auto-creating Google users.
+- Created route handler src/app/api/auth/[...nextauth]/route.ts and register API src/app/api/auth/register/route.ts (validates name/email/password rules, checks duplicate, hashes, creates user).
+- Created SessionProvider wrapper, wired into root layout (inside ThemeProvider).
+- Built /login page (client): email+password form, show/hide password, "Continue with Google" button, demo credentials hint, error states. Wrapped in <Suspense> for useSearchParams. Redirects to callbackUrl via window.location after success.
+- Built /register page (client): name/email/password/confirm form, LIVE password validation UI (4 rules: 8+ chars, uppercase, number, special — green checkmarks as you type), confirm-match indicator, Google button, auto-login after register.
+- Created HeaderAuth component (auth-aware): shows "Log in"/"Sign up" buttons when logged out, avatar+dropdown (Dashboard, Orders, Courses, Wishlist, Admin Console for admins, Sign out) when logged in.
+- Updated SiteHeader: replaced static User dropdown with HeaderAuth; mobile drawer is auth-aware (Login/Signup vs Account/Admin/Sign out).
+- Gated /account layout: getServerSession → redirect to /login?callbackUrl=/account if no session. Passes real user (name, email, initials) to AccountSidebar.
+- Updated AccountSidebar: shows real logged-in user (avatar/initials, name, email), real signOut via next-auth.
+- Gated /admin layout: requires session + admin role; shows "Access restricted" page for non-admins.
+- Updated seed: hashed passwords for demo users (student@example.com / Student123!, admin@kbscircuit.com / Admin123!).
+- Restarted dev server to pick up regenerated Prisma client (critical — stale client had no password field).
+- Fixed useSearchParams Suspense requirement (App Router) — was breaking form hydration/submit.
+
+Stage Summary:
+- Full authentication working end-to-end (verified with Agent Browser):
+  • Login as student (student@example.com / Student123!) → redirects to /account, sidebar shows "Sam Student".
+  • Login as admin (admin@kbscircuit.com / Admin123!) → can access /admin dashboard.
+  • Register new Gmail account (testmaker@gmail.com / Strong1!) → created in DB with hashed password, auto-logged-in, redirected to /account.
+  • Password validation: 4 live rules (8+ chars, uppercase, number, special) with green checkmarks.
+  • /account redirects to /login?callbackUrl=/account when logged out.
+  • /admin shows "Access restricted" for students, full access for admins.
+  • Header: "Log in"/"Sign up" when logged out; avatar dropdown with Sign out when logged in.
+- Demo credentials shown on the login page.
+- Google sign-in button present; shows configuration toast if GOOGLE_CLIENT_ID/SECRET not set (env-driven).
+- Lint clean, all routes 200, no console errors.

@@ -1,3 +1,6 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,12 +11,27 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import { AccountSidebar } from "./account-sidebar";
+import { initialsFromName } from "@/lib/password-rules";
 
-export default function AccountLayout({
+export default async function AccountLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) {
+    redirect("/login?callbackUrl=/account");
+  }
+
+  const user = {
+    name: session.user.name || null,
+    email: session.user.email || null,
+    image: session.user.image || null,
+    initials: initialsFromName(session.user.name, session.user.email),
+    role: (session.user as any).role || "customer",
+  };
+
   return (
     <div className="container-page py-6 md:py-10">
       <Breadcrumb>
@@ -25,9 +43,7 @@ export default function AccountLayout({
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/account">Account</Link>
-            </BreadcrumbLink>
+            <BreadcrumbPage>Account</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -40,7 +56,7 @@ export default function AccountLayout({
       </p>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[240px_1fr] lg:gap-10">
-        <AccountSidebar />
+        <AccountSidebar user={user} />
         <div className="min-w-0">{children}</div>
       </div>
     </div>

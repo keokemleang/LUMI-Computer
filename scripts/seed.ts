@@ -1,4 +1,5 @@
 import { db } from "../src/lib/db";
+import { hashPassword } from "../src/lib/password";
 
 // ----- Helpers -----
 const j = (v: unknown) => JSON.stringify(v);
@@ -22,12 +23,22 @@ async function main() {
   await db.category.deleteMany();
   await db.user.deleteMany();
 
-  // Admin user
+  // Admin + demo student user (with hashed passwords)
   await db.user.create({
-    data: { email: "admin@kbscircuit.com", name: "KBSCircuit Admin", role: "admin" },
+    data: {
+      email: "admin@kbscircuit.com",
+      name: "KBSCircuit Admin",
+      role: "admin",
+      password: hashPassword("Admin123!"),
+    },
   });
   await db.user.create({
-    data: { email: "student@example.com", name: "Sam Student", role: "customer" },
+    data: {
+      email: "student@example.com",
+      name: "Sam Student",
+      role: "customer",
+      password: hashPassword("Student123!"),
+    },
   });
 
   // ----- Categories -----
