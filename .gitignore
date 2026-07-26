@@ -36,6 +36,14 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local sqlite dev artifacts (production uses Postgres via DATABASE_URL)
+*.db
+*.db-journal
+
+# test artifacts
+/test-results/
+/playwright-report/
+
 
 # typescript
 *.tsbuildinfo

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <style>
+      .label { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 20px; letter-spacing: 0.04em; fill: #14171C; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="400" height="400" fill="#F5F6F8"/>
+  <g opacity="0.9">
+    <rect x="90" y="90" width="220" height="220" rx="8" fill="none" stroke="#3457D5" stroke-width="6"/>
+    <rect x="115" y="115" width="60" height="60" rx="4" fill="#3457D5" opacity="0.15" stroke="#3457D5" stroke-width="3"/>
+    <rect x="200" y="115" width="90" height="18" fill="none" stroke="#3457D5" stroke-width="3"/>
+    <rect x="200" y="140" width="90" height="18" fill="none" stroke="#3457D5" stroke-width="3"/>
+    <rect x="115" y="200" width="16" height="90" fill="none" stroke="#3457D5" stroke-width="3"/>
+    <rect x="140" y="200" width="16" height="90" fill="none" stroke="#3457D5" stroke-width="3"/>
+    <circle cx="270" cy="270" r="4" fill="#E2A63B"/>
+    <circle cx="290" cy="200" r="4" fill="#E2A63B"/>
+  </g>
+  <text x="200" y="355" class="label">MOTHERBOARD</text>
+</svg>

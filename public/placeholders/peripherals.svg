@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <style>
+      .label { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 20px; letter-spacing: 0.04em; fill: #14171C; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="400" height="400" fill="#F5F6F8"/>
+  <g opacity="0.9">
+    <rect x="100" y="150" width="200" height="80" rx="8" fill="none" stroke="#3457D5" stroke-width="6"/>
+    <rect x="118" y="168" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/><rect x="147" y="168" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/><rect x="176" y="168" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/><rect x="205" y="168" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/><rect x="234" y="168" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/><rect x="263" y="168" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/>
+    <rect x="118" y="194" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/><rect x="147" y="194" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/><rect x="176" y="194" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/><rect x="205" y="194" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/><rect x="234" y="194" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/><rect x="263" y="194" width="18" height="18" rx="3" fill="#3457D5" opacity="0.3"/>
+    <circle cx="200" cy="240" r="4" fill="#E2A63B"/>
+  </g>
+  <text x="200" y="355" class="label">PERIPHERAL</text>
+</svg>

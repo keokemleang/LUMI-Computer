@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <style>
+      .label { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 20px; letter-spacing: 0.04em; fill: #14171C; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="400" height="400" fill="#F5F6F8"/>
+  <g opacity="0.9">
+    <rect x="120" y="90" width="160" height="110" rx="6" fill="none" stroke="#3457D5" stroke-width="6"/>
+    <path d="M95,290 L305,290 L285,225 L115,225 Z" fill="none" stroke="#3457D5" stroke-width="6" stroke-linejoin="round"/>
+    <circle cx="200" cy="257" r="4" fill="#E2A63B"/>
+  </g>
+  <text x="200" y="355" class="label">LAPTOP</text>
+</svg>

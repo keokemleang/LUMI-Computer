@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <style>
+      .label { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 20px; letter-spacing: 0.04em; fill: #14171C; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="400" height="400" fill="#F5F6F8"/>
+  <g opacity="0.9">
+    <rect x="100" y="100" width="200" height="130" rx="8" fill="none" stroke="#3457D5" stroke-width="6"/>
+    <line x1="200" y1="230" x2="200" y2="270" stroke="#3457D5" stroke-width="6" stroke-linecap="round"/>
+    <line x1="155" y1="300" x2="245" y2="300" stroke="#3457D5" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="200" cy="165" r="4" fill="#E2A63B"/>
+  </g>
+  <text x="200" y="355" class="label">MONITOR</text>
+</svg>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <style>
+      .label { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 20px; letter-spacing: 0.04em; fill: #14171C; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="400" height="400" fill="#F5F6F8"/>
+  <g opacity="0.9">
+    <rect x="140" y="80" width="120" height="240" rx="10" fill="none" stroke="#3457D5" stroke-width="6"/>
+    <circle cx="200" cy="160" r="32" fill="none" stroke="#3457D5" stroke-width="4"/>
+    <circle cx="200" cy="160" r="4" fill="#E2A63B"/>
+    <circle cx="200" cy="250" r="32" fill="none" stroke="#3457D5" stroke-width="4"/>
+    <circle cx="200" cy="250" r="4" fill="#E2A63B"/>
+  </g>
+  <text x="200" y="355" class="label">CASE / COOLING</text>
+</svg>

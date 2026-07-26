@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <style>
+      .label { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 20px; letter-spacing: 0.04em; fill: #14171C; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="400" height="400" fill="#F5F6F8"/>
+  <g opacity="0.9">
+    <rect x="130" y="90" width="30" height="220" rx="4" fill="none" stroke="#3457D5" stroke-width="6"/>
+    <rect x="190" y="90" width="30" height="220" rx="4" fill="none" stroke="#3457D5" stroke-width="6"/>
+    <rect x="250" y="90" width="30" height="220" rx="4" fill="none" stroke="#3457D5" stroke-width="6"/>
+    <line x1="130" y1="120" x2="160" y2="120" stroke="#3457D5" stroke-width="2" opacity="0.5"/><line x1="130" y1="148" x2="160" y2="148" stroke="#3457D5" stroke-width="2" opacity="0.5"/><line x1="130" y1="176" x2="160" y2="176" stroke="#3457D5" stroke-width="2" opacity="0.5"/><line x1="130" y1="204" x2="160" y2="204" stroke="#3457D5" stroke-width="2" opacity="0.5"/><line x1="130" y1="232" x2="160" y2="232" stroke="#3457D5" stroke-width="2" opacity="0.5"/><line x1="130" y1="260" x2="160" y2="260" stroke="#3457D5" stroke-width="2" opacity="0.5"/>
+    <circle cx="205" cy="200" r="4" fill="#E2A63B"/>
+  </g>
+  <text x="200" y="355" class="label">MEMORY</text>
+</svg>
