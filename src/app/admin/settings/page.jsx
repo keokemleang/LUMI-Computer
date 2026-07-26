@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Store, CreditCard, Truck, Bell, Save, Check, Loader2, Package, Mail, Megaphone, QrCode, Banknote, Cloud } from "lucide-react";
+import Image from "next/image";
+import { Store, CreditCard, Truck, Bell, Save, Check, Loader2, Package, Mail, Megaphone, QrCode, Banknote, Cloud, Image as ImageIcon, Upload, X } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,6 +75,10 @@ export default function AdminSettingsPage() {
               <Store className="h-4 w-4" />
               General
             </TabsTrigger>
+            <TabsTrigger value="homepage">
+              <ImageIcon className="h-4 w-4" />
+              Homepage
+            </TabsTrigger>
             <TabsTrigger value="payments">
               <CreditCard className="h-4 w-4" />
               Payments
@@ -90,6 +95,9 @@ export default function AdminSettingsPage() {
 
           <TabsContent value="general" className="mt-6">
             <GeneralSection />
+          </TabsContent>
+          <TabsContent value="homepage" className="mt-6">
+            <HomepageSection />
           </TabsContent>
           <TabsContent value="payments" className="mt-6">
             <PaymentsSection />
@@ -214,6 +222,100 @@ function GeneralSection() {
             </div>
           </div>
 
+          <div className="flex justify-end">
+            <SaveButton saving={saving} saved={saved} />
+          </div>
+        </form>
+      </CardContent>
+    </Card>;
+}
+
+function HeroImagePicker({ label, value, onChange }) {
+  const [uploading, setUploading] = React.useState(false);
+  const fileInputRef = React.useRef(null);
+
+  async function handleFileSelect(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setUploading(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        toast.error(data.error || "Failed to upload image");
+        return;
+      }
+      onChange(data.url);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return <div className="space-y-1.5">
+      <Label>{label}</Label>
+      <div className="flex items-center gap-3">
+        {value ? <div className="group relative h-20 w-20 overflow-hidden rounded-md border border-border bg-muted">
+            <Image src={value} alt="" fill sizes="80px" className="object-cover" />
+            <button type="button" onClick={() => onChange("")} className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-background/90 text-foreground opacity-0 shadow transition-opacity group-hover:opacity-100" aria-label="Remove image">
+              <X className="h-3 w-3" />
+            </button>
+          </div> : <button type="button" onClick={() => fileInputRef.current?.click()} disabled={uploading} className="grid h-20 w-20 place-items-center rounded-md border border-dashed border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50">
+            {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
+          </button>}
+        <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileSelect} />
+      </div>
+    </div>;
+}
+
+function HomepageSection() {
+  const { settings, loading, save } = React.useContext(SettingsContext);
+  const [saving, setSaving] = React.useState(false);
+  const [saved, setSaved] = React.useState(false);
+  const [heroImage1, setHeroImage1] = React.useState("");
+  const [heroImage2, setHeroImage2] = React.useState("");
+
+  React.useEffect(() => {
+    if (settings) {
+      setHeroImage1(settings.heroImage1);
+      setHeroImage2(settings.heroImage2);
+    }
+  }, [settings]);
+
+  if (loading || !settings) return <LoadingCard />;
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSaving(true);
+    const ok = await save({
+      heroImage1,
+      heroImage2
+    }, "Homepage images saved");
+    setSaving(false);
+    if (ok) {
+      setSaved(true);
+      window.setTimeout(() => setSaved(false), 2000);
+    }
+  }
+
+  return <Card className="gap-0">
+      <CardHeader>
+        <CardTitle>Hero images</CardTitle>
+        <CardDescription>
+          The two product photos shown in the homepage hero section.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <HeroImagePicker label="Hero image 1 (graphics card)" value={heroImage1} onChange={setHeroImage1} />
+            <HeroImagePicker label="Hero image 2 (laptop)" value={heroImage2} onChange={setHeroImage2} />
+          </div>
           <div className="flex justify-end">
             <SaveButton saving={saving} saved={saved} />
           </div>

@@ -4,7 +4,7 @@ import { requireAdmin } from "@/lib/require-admin";
 import { getSettings } from "@/lib/settings";
 import { parseJsonBody } from "@/lib/parse-json";
 
-const EDITABLE_FIELDS = ["storeName", "supportEmail", "currency", "timezone", "flatShippingRate", "freeShippingThreshold", "enableFreeShipping", "internationalShipping", "notifyNewOrder", "notifyNewsletter", "notifyMarketing"];
+const EDITABLE_FIELDS = ["storeName", "supportEmail", "currency", "timezone", "flatShippingRate", "freeShippingThreshold", "enableFreeShipping", "internationalShipping", "notifyNewOrder", "notifyNewsletter", "notifyMarketing", "heroImage1", "heroImage2"];
 
 export async function GET() {
   const { error } = await requireAdmin();

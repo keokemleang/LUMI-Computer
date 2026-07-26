@@ -6,8 +6,9 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/product-card";
 import { getFeaturedCategories, getFeaturedProducts } from "@/lib/data";
+import { getSettings } from "@/lib/settings";
 export default async function HomePage() {
-  const [categories, products] = await Promise.all([getFeaturedCategories(), getFeaturedProducts()]);
+  const [categories, products, settings] = await Promise.all([getFeaturedCategories(), getFeaturedProducts(), getSettings()]);
   return <>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border">
@@ -57,7 +58,7 @@ export default async function HomePage() {
               <div className="space-y-4">
                 <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
                   <div className="relative aspect-square">
-                    <Image src="https://picsum.photos/seed/hero-gpu/600/600" alt="Graphics card" fill className="object-cover" sizes="300px" />
+                    <Image src={settings.heroImage1} alt="Graphics card" fill className="object-cover" sizes="300px" />
                   </div>
                 </div>
                 <div className="overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm">
@@ -74,7 +75,7 @@ export default async function HomePage() {
                 </div>
                 <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
                   <div className="relative aspect-square">
-                    <Image src="https://picsum.photos/seed/hero-laptop/600/600" alt="Laptop" fill className="object-cover" sizes="300px" />
+                    <Image src={settings.heroImage2} alt="Laptop" fill className="object-cover" sizes="300px" />
                   </div>
                 </div>
               </div>
