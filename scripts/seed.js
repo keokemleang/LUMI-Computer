@@ -1,5 +1,5 @@
 import { db } from "../src/lib/db";
-import { adminAuth } from "../src/lib/firebase-admin";
+import { getAdminAuth } from "../src/lib/firebase-admin";
 
 // ----- Helpers -----
 const j = v => JSON.stringify(v);
@@ -16,6 +16,7 @@ async function seedUser({
   role,
   password
 }) {
+  const adminAuth = await getAdminAuth();
   if (adminAuth) {
     try {
       await adminAuth.createUser({

@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  // firebase-admin's auth module pulls in jwks-rsa -> jose. Turbopack's
-  // server runtime (the "build" script now forces webpack instead, see
-  // package.json) resolved jose to its ESM-only "webapi" export condition
-  // but loaded it via require() semantics, throwing ERR_REQUIRE_ESM in
-  // Vercel's deployed function on every route that touches firebase-admin
-  // (login/register/session/admin) — not reproducible locally, since
-  // `next start` runs against the full untraced node_modules. Keeping
-  // firebase-admin external too so webpack leaves it as a plain Node
-  // require() at runtime rather than bundling it.
+  // firebase-admin/auth depends on jwks-rsa@4, which depends on jose@6 —
+  // an ESM-only package with no CJS/"require" export condition. Node.js
+  // only added the ability for require() to load an ESM graph directly
+  // (jwks-rsa's own stated engine requirement) in 20.19.0 / 22.12.0 / 23+;
+  // an older Node runtime throws ERR_REQUIRE_ESM the moment firebase-admin/
+  // auth is imported, regardless of bundler. The real fix is pinning the
+  // Node.js version (see "engines" in package.json), not the bundler —
+  // keeping firebase-admin external here is just standard practice so it
+  // isn't unnecessarily bundled.
   serverExternalPackages: ["firebase-admin"],
   images: {
     remotePatterns: [

@@ -2,10 +2,13 @@
   "name": "lumi-computer",
   "version": "0.2.0",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "postinstall": "prisma generate",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "NODE_ENV=production next start",
     "lint": "eslint .",
     "test": "bun test tests/unit tests/api",

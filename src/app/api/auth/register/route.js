@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { adminAuth } from "@/lib/firebase-admin";
+import { getAdminAuth } from "@/lib/firebase-admin";
 import { parseJsonBody } from "@/lib/parse-json";
 import { rateLimit } from "@/lib/rate-limit";
 
@@ -13,6 +13,7 @@ export async function POST(req) {
   const limited = rateLimit(req, { key: "auth:register", limit: 10, windowMs: 60_000 });
   if (limited) return limited;
 
+  const adminAuth = await getAdminAuth();
   if (!adminAuth) {
     return NextResponse.json({
       ok: false,

@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { adminAuth } from "@/lib/firebase-admin";
+import { getAdminAuth } from "@/lib/firebase-admin";
 import { db } from "@/lib/db";
 
 const SESSION_COOKIE = "kl_session";
@@ -11,6 +11,7 @@ const SESSION_COOKIE = "kl_session";
  * Returns null if there is no valid session.
  */
 export async function getSession() {
+  const adminAuth = await getAdminAuth();
   if (!adminAuth) return null;
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(SESSION_COOKIE)?.value;
