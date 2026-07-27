@@ -10,6 +10,13 @@ const nextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com" },
     ],
   },
+  async redirects() {
+    return [
+      // /login/admin never existed as a route — admin sign-in uses the same
+      // /login page as everyone else, gated by role after authentication.
+      { source: "/login/admin", destination: "/login?callbackUrl=/admin", permanent: false },
+    ];
+  },
   async headers() {
     return [
       {
