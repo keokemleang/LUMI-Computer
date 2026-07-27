@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { getAdminAuth } from "@/lib/firebase-admin";
+import { getAdminAuth, getAdminAuthError } from "@/lib/firebase-admin";
 import { parseJsonBody } from "@/lib/parse-json";
 import { rateLimit } from "@/lib/rate-limit";
 
@@ -17,7 +17,7 @@ export async function POST(req) {
   if (!adminAuth) {
     return NextResponse.json({
       ok: false,
-      error: "Firebase Admin is not configured on the server"
+      error: getAdminAuthError() || "Firebase Admin is not configured on the server"
     }, {
       status: 500
     });
