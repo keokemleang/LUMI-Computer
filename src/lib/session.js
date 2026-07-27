@@ -27,18 +27,30 @@ export async function getSession() {
   // callers (e.g. Address, Order) hold foreign keys to it. Google sign-in
   // via the login page (as opposed to register) never calls the explicit
   // sync endpoint, so this upsert is the only guarantee that row exists.
-  const profile = await db.user.upsert({
-    where: {
-      email: decoded.email
-    },
-    update: {},
-    create: {
-      email: decoded.email,
-      name: decoded.name || null,
-      image: decoded.picture || null,
-      role: "customer"
-    }
-  });
+  //
+  // This is called on every /admin page load and every requireAdmin()-gated
+  // API route, none of which wrap getSession() in their own try/catch — a
+  // transient DB error here must not become an uncaught exception (which
+  // Vercel serves as an HTML crash page instead of JSON/a redirect). Treat
+  // "can't reach the DB" the same as "no session": fail closed, not crashed.
+  let profile;
+  try {
+    profile = await db.user.upsert({
+      where: {
+        email: decoded.email
+      },
+      update: {},
+      create: {
+        email: decoded.email,
+        name: decoded.name || null,
+        image: decoded.picture || null,
+        role: "customer"
+      }
+    });
+  } catch (err) {
+    console.error("[session] Failed to load/create user profile:", err);
+    return null;
+  }
 
   return {
     user: {
