@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "postinstall": "prisma generate",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "NODE_ENV=production next start",
     "lint": "eslint .",
     "test": "bun test tests/unit tests/api",
